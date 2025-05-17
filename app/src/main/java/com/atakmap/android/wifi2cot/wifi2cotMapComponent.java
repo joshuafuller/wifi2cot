@@ -33,6 +33,8 @@ public class wifi2cotMapComponent extends DropDownMapComponent {
 
     private WifiManager wifiManager;
 
+    private BroadcastReceiver wifiScanReceiver;
+
     // nodes will hold k,v for the BSSID and the rssi,lat,lng,bssid,ssid values
     private final static HashMap<String, List<String[]>> nodes = new HashMap<>();
 
@@ -54,7 +56,7 @@ public class wifi2cotMapComponent extends DropDownMapComponent {
 
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
-        BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
+        wifiScanReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent intent) {
                 boolean success = intent.getBooleanExtra(
@@ -171,6 +173,9 @@ public class wifi2cotMapComponent extends DropDownMapComponent {
 
     @Override
     protected void onDestroyImpl(Context context, MapView view) {
+        if (wifiScanReceiver != null) {
+            context.unregisterReceiver(wifiScanReceiver);
+        }
         super.onDestroyImpl(context, view);
     }
 
