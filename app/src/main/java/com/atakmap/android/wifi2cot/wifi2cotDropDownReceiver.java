@@ -142,7 +142,6 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
         HashMap<String, List<String[]>> nodes = wifi2cotMapComponent.getNodes();
 
         double[] rssi_sum = new double[nodes.size()];
-        double[] SignalRatio_LatLng = new double[nodes.size()];
 
         // build rssi_sum
         // for every BSSID, sum up all the rssi values rssi value = 100 - abs(rssi)
@@ -157,19 +156,8 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
             i++;
         }
 
-        // build signal ratio
-        // for every rssi value, divided by the rssi_sum for that point for a SR
-        i = 0;
-        for (Map.Entry<String, List<String[]>> s: nodes.entrySet()) {
-            for (String[] l: s.getValue()) {
-                SignalRatio_LatLng[i] = Integer.parseInt(l[0]) / rssi_sum[i];
-                Log.d(TAG, String.format(Locale.US, "SR: %f", SignalRatio_LatLng[i]));
-            }
-            i++;
-        }
-
         // approx triangulation
-        // sum up all the lat/lng * SR for that point
+        // sum up all the lat/lng * weighted ratio for that point
         i = 0;
         for (Map.Entry<String, List<String[]>> s: nodes.entrySet()) {
             double lat = 0.0;
@@ -179,8 +167,9 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
             int sampleSize = 0;
 
             for (String[] l: s.getValue()) {
-                lat += (Double.parseDouble(l[1]) * SignalRatio_LatLng[i]);
-                lng += (Double.parseDouble(l[2]) * SignalRatio_LatLng[i]);
+                double ratio = Integer.parseInt(l[0]) / rssi_sum[i];
+                lat += Double.parseDouble(l[1]) * ratio;
+                lng += Double.parseDouble(l[2]) * ratio;
                 bssid = l[3];
                 ssid = l[4];
                 sampleSize++;
