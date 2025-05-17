@@ -195,7 +195,9 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
             cotEvent.setStart(time);
             cotEvent.setStale(time.addMinutes(90));
 
-            cotEvent.setUID(bssid);
+            // sanitize SSID for use as UID to avoid spaces or special characters
+            String sanitizedSsid = ssid == null ? "" : ssid.replaceAll("[^A-Za-z0-9_-]", "_");
+            cotEvent.setUID(sanitizedSsid);
 
             cotEvent.setType("a-f-G-I-E");
 
