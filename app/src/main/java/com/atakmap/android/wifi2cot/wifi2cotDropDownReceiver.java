@@ -69,6 +69,11 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
     /**************************** PUBLIC METHODS *****************************/
 
     public void disposeImpl() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+            scanning = false;
+        }
     }
 
     /**************************** INHERITED METHODS *****************************/
@@ -133,6 +138,11 @@ public class wifi2cotDropDownReceiver extends DropDownReceiver implements
 
     @Override
     public void onDropDownClose() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+            scanning = false;
+        }
     }
 
     public void compute() {
