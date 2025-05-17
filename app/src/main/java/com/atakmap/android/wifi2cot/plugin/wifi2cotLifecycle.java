@@ -14,6 +14,6 @@ public class wifi2cotLifecycle extends AbstractPlugin implements IPlugin {
 
     public wifi2cotLifecycle(IServiceController serviceController) {
         super(serviceController, new wifi2cotTool(serviceController.getService(PluginContextProvider.class).getPluginContext()), new wifi2cotMapComponent());
-        Log.d(TAG, "wifi2cotLifcycle");
+        Log.d(TAG, "wifi2cotLifecycle");
     }
 }
